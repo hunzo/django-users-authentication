@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 
@@ -41,8 +42,9 @@ def sign_up(request):
         form = forms.RegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
+            # messages.success(request, 'Account was created.')
             login(request, user)
-            return redirect('/')
+            return redirect('login')
     else:
         form = forms.RegistrationForm()
 
