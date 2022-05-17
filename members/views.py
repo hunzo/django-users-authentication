@@ -44,7 +44,7 @@ def sign_up(request):
             user = form.save()
             # messages.success(request, 'Account was created.')
             login(request, user)
-            return redirect('login')
+            return redirect('home')
     else:
         form = forms.RegistrationForm()
 
