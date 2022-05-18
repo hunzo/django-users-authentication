@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.contrib.auth import login, logout, authenticate
+# from django.contrib import messages
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 
 from . import forms
@@ -22,7 +22,7 @@ def Home(request):
     return render(request, 'home.html', {"posts": posts})
 
 
-@login_required(login_url="/login")
+@login_required(login_url="login")
 def create_post(request):
     if request.method == "POST":
         form = forms.PostForm(request.POST)
@@ -30,11 +30,27 @@ def create_post(request):
             post = form.save(commit=False)
             post.author = request.user
             post.save()
-            return redirect("/home")
+            return redirect("home")
     else:
         form = forms.PostForm()
 
     return render(request, 'create_post.html', {"form": form})
+
+
+@login_required(login_url="login")
+def update_post(request, pk):
+
+    # Update by Author
+    post = models.Post.objects.get(id=pk)
+    if request.method == "POST":
+        form = forms.PostForm(request.POST, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect("home")
+    else:
+        form = forms.PostForm(instance=post)
+
+    return render(request, 'update_post.html', {"form": form})
 
 
 def sign_up(request):
